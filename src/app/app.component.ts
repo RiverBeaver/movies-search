@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MovieSearchComponent } from "../load/movie-search/movie-search.component";
+import { MovieSearchComponent } from "./features/search/pages/movie-search/movie-search.component";
 
 @Component({
   selector: 'app-root',

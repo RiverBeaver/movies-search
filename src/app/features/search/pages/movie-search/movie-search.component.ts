@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './movie-search.component.scss'
 })
 export class MovieSearchComponent {
-
 }

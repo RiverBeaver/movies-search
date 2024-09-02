@@ -1,0 +1,26 @@
+div.line {
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px dotted gray;
+
+  img.poster {
+    width: 2.5rem;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .name {
+    font-size: 0.875rem;
+    line-height: 0.875rem;
+    .alternative {
+      color: rgb(82, 82, 82);
+    }
+  }
+}

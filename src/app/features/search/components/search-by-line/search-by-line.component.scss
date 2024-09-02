@@ -1,0 +1,47 @@
+form {
+  font-family: Roboto, sans-serif;
+  width: 20rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #44474ecb;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  background-color: var(--mdc-filled-text-field-container-color);
+  position: relative;
+
+  input {
+    outline: none;
+    border: none;
+    background-color: transparent;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    img {
+      width: 1rem;
+      vertical-align: middle;
+    }
+  }
+
+  &:focus-within {
+    border-color: #095bb3c4;
+  }
+}
+
+.list-movies {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: var(--mdc-filled-text-field-container-color);
+  margin-top: 1px;
+}

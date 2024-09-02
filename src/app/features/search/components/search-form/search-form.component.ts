@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChipsAutocompleteComponent } from '../chips-autocomplete/chips-autocomplete.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-search-form',
@@ -16,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     MatButtonToggleModule,
     ChipsAutocompleteComponent,
+    MatButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search-form.component.html',

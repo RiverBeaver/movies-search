@@ -1,6 +1,5 @@
-<h2>Расширенный поиск</h2>
-<form action="" class="example-form">
-  <div class="type">
+<form action="" class="example-form" [formGroup]="searchForm">
+  <!-- <div class="type">
     <mat-button-toggle-group
       name="ingredients"
       aria-label="Ingredients"
@@ -13,40 +12,46 @@
       <mat-button-toggle value="anime-series">Аниме сериал</mat-button-toggle>
       <mat-button-toggle value="cartoon">Мультфильм</mat-button-toggle>
     </mat-button-toggle-group>
-  </div>
+  </div> -->
 
   <div class="genre">
-    <app-chips-autocomplete [type]="'genres'"></app-chips-autocomplete>
+    <app-chips-autocomplete
+      [type]="'genres'"
+      (changeValue)="addValue($event)"
+    ></app-chips-autocomplete>
   </div>
   <div class="countries">
-    <app-chips-autocomplete [type]="'countries'"></app-chips-autocomplete>
+    <app-chips-autocomplete
+      [type]="'countries'"
+      (changeValue)="addValue($event)"
+    ></app-chips-autocomplete>
   </div>
-  <div class="year-and-rating-mpaa">
-    <mat-form-field class="year">
-      <mat-label>Годы</mat-label>
-      <mat-select hideSingleSelectionIndicator="true">
-        <mat-option>Все годы</mat-option>
-        <mat-option value="2024">2024 год</mat-option>
-        <mat-option value="2023">2023 год</mat-option>
-        <mat-option value="2022">2022 год</mat-option>
-        <mat-option value="2021">2021 год</mat-option>
-        <mat-option value="2020">2020 год</mat-option>
-        <mat-option value="2019">2019 год</mat-option>
-        <mat-option value="2018">2018 год</mat-option>
-        <mat-option value="2017">2017 год</mat-option>
-        <mat-option value="2016">2016 год</mat-option>
-        <mat-option value="2020-2024">2020-2024</mat-option>
-        <mat-option value="2015-2020">2015-2020</mat-option>
-        <mat-option value="2010-2015">2010-2015</mat-option>
-        <mat-option value="2000-2010">2000-2010</mat-option>
-        <mat-option value="1990-2000">1990-2000</mat-option>
-        <mat-option value="1980-1990">1980-1990</mat-option>
-        <mat-option value="1874-1980">до 1980</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-form-field class="year">
+    <mat-label>Годы</mat-label>
+    <mat-select hideSingleSelectionIndicator="true" formControlName="year">
+      <mat-option>Все годы</mat-option>
+      <mat-option value="2024">2024 год</mat-option>
+      <mat-option value="2023">2023 год</mat-option>
+      <mat-option value="2022">2022 год</mat-option>
+      <mat-option value="2021">2021 год</mat-option>
+      <mat-option value="2020">2020 год</mat-option>
+      <mat-option value="2019">2019 год</mat-option>
+      <mat-option value="2018">2018 год</mat-option>
+      <mat-option value="2017">2017 год</mat-option>
+      <mat-option value="2016">2016 год</mat-option>
+      <mat-option value="2020-2024">2020-2024</mat-option>
+      <mat-option value="2015-2020">2015-2020</mat-option>
+      <mat-option value="2010-2015">2010-2015</mat-option>
+      <mat-option value="2000-2010">2000-2010</mat-option>
+      <mat-option value="1990-2000">1990-2000</mat-option>
+      <mat-option value="1980-1990">1980-1990</mat-option>
+      <mat-option value="1874-1980">до 1980</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="ratings" formGroupName="ratings">
     <mat-form-field class="rating-mpaa">
       <mat-label>Рейтинг MPAA</mat-label>
-      <mat-select hideSingleSelectionIndicator="true">
+      <mat-select hideSingleSelectionIndicator="true" formControlName="mpaa">
         <mat-option>Любой рейтинг</mat-option>
         <mat-option value="g" title="Фильм демонстрируется без ограничений"
           >G</mat-option
@@ -56,7 +61,7 @@
           title="Детям рекомендуется смотреть фильм с родителями"
           >PG</mat-option
         >
-        <mat-option value="pg-13" title="Просмотр не желателен детям до 13 лет"
+        <mat-option value="pg13" title="Просмотр не желателен детям до 13 лет"
           >PG-13</mat-option
         >
         <mat-option
@@ -65,17 +70,15 @@
           >R</mat-option
         >
         <mat-option
-          value="nc-17"
+          value="nc17"
           title="Лица 17-летнего возраста и младше на фильм не допускаются"
           >NC-17</mat-option
         >
       </mat-select>
     </mat-form-field>
-  </div>
-  <div class="ratings-kp-and-imdb">
     <mat-form-field class="rating-kp">
       <mat-label>Рейтинг Кинопоиск</mat-label>
-      <mat-select hideSingleSelectionIndicator="true">
+      <mat-select hideSingleSelectionIndicator="true" formControlName="kp">
         <mat-option>Любой рейтинг</mat-option>
         <mat-option value="9-10">Больше 9</mat-option>
         <mat-option value="8-10">Больше 8</mat-option>
@@ -86,7 +89,7 @@
     </mat-form-field>
     <mat-form-field class="rating-imdb">
       <mat-label>Рейтинг IMDB</mat-label>
-      <mat-select hideSingleSelectionIndicator="true">
+      <mat-select hideSingleSelectionIndicator="true" formControlName="imdb">
         <mat-option>Любой рейтинг</mat-option>
         <mat-option value="9-10">Больше 9</mat-option>
         <mat-option value="8-10">Больше 8</mat-option>
@@ -96,5 +99,5 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <button mat-flat-button type="submit">Поиск</button>
+  <button mat-flat-button type="submit" (click)="changeForm()">Поиск</button>
 </form>

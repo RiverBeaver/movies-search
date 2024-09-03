@@ -1,28 +1,54 @@
-@if (movie) {
-<div [ngClass]="isLine ? 'line' : 'card'" [id]="movie.id">
-  <img [src]="movie.posterUrl" alt="poster" class="poster" />
+@if (movie && isLine) {
+<div class="line" [id]="movie.id" (click)="showMovie(movie.id)">
+  <img
+    #poster
+    [src]="movie.posterUrl"
+    alt="poster"
+    class="poster"
+    (click)="test(poster)"
+    (onerror)="poster.src = 'placeholder-movie.svg'"
+  />
   <div class="info">
     <div class="name">
       <span>{{ movie.name ? movie.name : movie.alternativeName }}</span>
       @if (movie.name && movie.alternativeName && movie.name.length < 30) {
       <span class="alternative">, {{ movie.alternativeName }}</span>
       }
-      <!-- @if (movie.name && movie.alternativeName && movie.name.length < 30) {
-      {{ movie.name }},
-      <span class="alternative">{{ movie.alternativeName }}</span>
-      } @else if (movie.name) {
-      {{ movie.name }}
-      } @else {
-      {{ movie.alternativeName }}
-      } -->
     </div>
-    <div class="rating">
-      @if (movie.ratingKp ) {
-      {{ movie.ratingKp }} <sub>Кинопоиск</sub>
-      } @if (movie.ratingImdb) {}
+    <div class="ratings">
+      @if (movie.ratingKp) {
+      <span
+        class="rating"
+        [ngClass]="
+          movie.ratingKp >= 7
+            ? 'positive'
+            : movie.ratingKp < 5
+            ? 'negative'
+            : ''
+        "
+      >
+        {{ movie.ratingKp | number : "1.1-1" }}
+      </span>
+      <span class="sub"> Кинопоиск </span>
+      } @if (movie.ratingImdb) {
+      <span
+        class="rating"
+        [ngClass]="
+          movie.ratingImdb >= 7
+            ? 'positive'
+            : movie.ratingImdb < 5
+            ? 'negative'
+            : ''
+        "
+        >{{ movie.ratingImdb | number : "1.1-1" }}
+      </span>
+      <span class="sub"> IMDB</span>
+      }
     </div>
     <div class="other-info">
-      {{ movie.year }}
+      {{ movie.year }}@for (country of movie.countries; track country) {,
+      {{ country }}
+      }
     </div>
   </div>
 </div>

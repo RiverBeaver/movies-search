@@ -8,6 +8,8 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { UniversalMovieSearchService } from '../../services/universal-movie-search.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -45,10 +47,12 @@ export class ChipsAutocompleteComponent implements OnInit {
   labelName: string = '';
 
   @Input() type: string = '';
+  @Output() changeValue = new EventEmitter<{
+    values: string[];
+    type: string;
+  }>();
 
-  constructor(
-    private universalMovieSearchService: UniversalMovieSearchService
-  ) {}
+  constructor(private universalSearch: UniversalMovieSearchService) {}
 
   ngOnInit(): void {
     const getFilteredValues = () => {
@@ -60,13 +64,10 @@ export class ChipsAutocompleteComponent implements OnInit {
         : this.allValues.slice();
     };
 
-    this.universalMovieSearchService
-      .getGenresOrCountries(this.type)
-      .subscribe((data) => {
-        this.allValues = data;
-        this.filteredValues = computed(getFilteredValues);
-      });
-    // }
+    this.universalSearch.getGenresOrCountries(this.type).subscribe((data) => {
+      this.allValues = data;
+      this.filteredValues = computed(getFilteredValues);
+    });
 
     switch (this.type) {
       case 'genres':
@@ -89,6 +90,7 @@ export class ChipsAutocompleteComponent implements OnInit {
     }
 
     this.currentValue.set('');
+    this.changeValue.emit({ values: this.values(), type: this.type });
   }
 
   remove(value: string): void {
@@ -102,6 +104,7 @@ export class ChipsAutocompleteComponent implements OnInit {
       this.announcer.announce(`Removed ${value}`);
       return [...values];
     });
+    this.changeValue.emit({ values: this.values(), type: this.type });
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -109,8 +112,8 @@ export class ChipsAutocompleteComponent implements OnInit {
     if (!this.values().includes(value) && this.allValues.includes(value)) {
       this.values.update((values) => [...values, value]);
     }
-    console.log(this.currentValue());
     this.currentValue.set('');
     event.option.deselect();
+    this.changeValue.emit({ values: this.values(), type: this.type });
   }
 }

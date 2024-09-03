@@ -5,6 +5,11 @@ div.line {
   padding: 0.25rem;
   padding: 0.5rem 1rem;
   border-bottom: 1px dotted gray;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--mdc-filled-text-field-container-color);
+  }
 
   img.poster {
     width: 2.5rem;
@@ -15,12 +20,45 @@ div.line {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-self: stretch;
+  gap: 0.25rem;
+  font-size: 13px;
 
   .name {
-    font-size: 0.875rem;
     line-height: 0.875rem;
+
     .alternative {
       color: rgb(82, 82, 82);
     }
+  }
+
+  .ratings {
+    display: flex;
+    align-items: flex-end;
+    max-height: 1.25rem;
+    gap: 0.125rem;
+    color: #666666;
+
+    .rating {
+      line-height: 0.75rem;
+      font-weight: 600;
+
+      &.positive {
+        color: #009200;
+      }
+
+      &.negative {
+        color: #e42f2f;
+      }
+    }
+
+    .sub {
+      font-size: 0.625rem;
+      line-height: 0.5rem;
+    }
+  }
+
+  .other-info {
+    line-height: 1rem;
   }
 }

@@ -7,6 +7,7 @@ export default class BriefInformationMovie {
   isSeries: boolean;
   movieLength: number;
   genres: string[];
+  countries: string[];
   ratingKp: number;
   ratingImdb: number;
 
@@ -19,6 +20,9 @@ export default class BriefInformationMovie {
     this.isSeries = movie['isSeries'];
     this.movieLength = movie['movieLength'];
     this.genres = movie['genres'].map((elem: { name: string }) => elem.name);
+    this.countries = movie['countries'].map(
+      (elem: { name: string }) => elem.name
+    );
     this.ratingKp = movie['rating']['kp'];
     this.ratingImdb = movie['rating']['imdb'];
   }

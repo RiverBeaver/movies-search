@@ -5,6 +5,17 @@ import { map } from 'rxjs/operators';
 import { KEY } from '../../../core/constants/constants';
 import BriefInformationMovie from '../../../core/classes/brief-information-movie.class';
 
+type FilterParams = {
+  genres?: string[] | null;
+  countries?: string[] | null;
+  year?: string | null;
+  ratings?: {
+    mpaa?: string | null;
+    kp?: string | null;
+    imdb?: string | null;
+  };
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +24,7 @@ export class UniversalMovieSearchService {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      ['Content-Type']: 'application/x-www-form-urlencoded;charset=UTF-8',
       'X-API-KEY': KEY,
     },
   };
@@ -45,6 +57,7 @@ export class UniversalMovieSearchService {
       .pipe(
         map((data: any) => {
           const movies = data.docs;
+          console.log(movies);
           return movies.map((elem: any) => {
             return new BriefInformationMovie(elem);
           });
@@ -53,4 +66,40 @@ export class UniversalMovieSearchService {
   }
 
   searchMoviesByName(name: string) {}
+
+  searchMovieById(id: string) {}
+
+  searchMoviesByFilter(type: string, params: FilterParams) {
+    type = '&type=' + type;
+    const genres =
+      params.genres && Array.isArray(params.genres)
+        ? params.genres.reduce(
+            (acc: string, elem: string) => acc + '&genres.name=' + elem,
+            ''
+          )
+        : '';
+    const countries = params.countries
+      ? params.countries.reduce(
+          (acc: string, elem: string) => acc + '&countries.name=' + elem,
+          ''
+        )
+      : '';
+    const year = params.year ? '&year=' + params.year : '';
+    const ratingMpaa = params.ratings?.mpaa
+      ? '&ratingMpaa=' + params.ratings.mpaa
+      : '';
+    const ratingkp = params.ratings?.kp
+      ? '&rating.kp=' + params.ratings.kp
+      : '';
+    const ratingImdb = params.ratings?.imdb
+      ? '&rating.imdb=' + params.ratings.imdb
+      : '';
+
+    return this.http.get(
+      `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10${
+        type + genres + countries + year + ratingMpaa + ratingkp + ratingImdb
+      }`,
+      this.options
+    );
+  }
 }

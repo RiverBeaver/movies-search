@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import BriefInformationMovie from '../../../../core/classes/brief-information-movie.class';
@@ -15,6 +19,7 @@ import { BriefInformationMovieComponent } from '../../../movies-information/comp
     CommonModule,
     BriefInformationMovieComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search-by-line.component.html',
   styleUrl: './search-by-line.component.scss',
 })
@@ -23,8 +28,19 @@ export class SearchByLineComponent {
   isFocus: boolean = false;
   fiveMovies$?: Observable<BriefInformationMovie[]>;
   private subscription?: Subscription;
+  inside = false;
 
   constructor(private universalSearch: UniversalMovieSearchService) {}
+
+  @HostListener('click')
+  clicked() {
+    this.inside = true;
+  }
+  @HostListener('document:click')
+  clickedOut() {
+    this.isFocus = this.inside ? true : false;
+    this.inside = false;
+  }
 
   showMovies() {
     console.log(this.line.value);
@@ -39,7 +55,6 @@ export class SearchByLineComponent {
   }
 
   changeFocus() {
-    this.isFocus = !this.isFocus;
-    console.log(this.isFocus);
+    this.isFocus = true;
   }
 }

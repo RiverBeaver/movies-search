@@ -1,36 +1,38 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  width: 30rem;
-  margin: 2rem;
-}
-
-h2 {
-  text-align: center;
-}
 form {
   display: flex;
-  flex-direction: column;
-  width: 30rem;
+  margin: 2rem;
+  // width: min(25rem, 45%);
+  // flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 0 1rem;
+  // width: 30rem;
 
   .type {
     align-self: center;
-    width: 28rem;
+    // width: 28rem;
   }
 
-  .genre {
-    margin-top: 1.25rem;
+  .genre,
+  .countries {
+    // margin-top: 1.25rem;
+    min-width: 30rem;
   }
 
-  .year-and-rating-mpaa,
-  .ratings-kp-and-imdb {
+  .ratings {
     display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
     justify-content: space-between;
-    gap: 1rem;
+    // gap: 1rem;
 
-    > * {
+    & > * {
       flex-grow: 1;
     }
+  }
+
+  button {
+    align-self: center;
   }
 }

@@ -4,14 +4,12 @@
     [formControl]="line"
     (input)="showMovies()"
     (focus)="changeFocus()"
-    (blur)="changeFocus()"
     placeholder="Введите название"
   />
-  <button><img src="icons8-поиск.svg" alt="Search" /></button>
-  <div
-    [hidden]="this.line.value === '' || (this.line.value && !isFocus)"
-    class="list-movies"
-  >
+  <button>
+    <img src="icons8-поиск.svg" alt="Search" />
+  </button>
+  <div class="list-movies" [hidden]="!isFocus">
     @if (this.line.value) { @for (movie of fiveMovies$ | async; track movie.id)
     {
     <app-brief-information-movie

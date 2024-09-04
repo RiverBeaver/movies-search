@@ -1,5 +1,9 @@
-@if (movie && isLine) {
-<div class="line" [id]="movie.id" (click)="showMovie(movie.id)">
+@if (movie) {
+<div
+  [ngClass]="isShort ? 'short' : 'expanded'"
+  [id]="movie.id"
+  (click)="showMovie(movie.id)"
+>
   <img
     #poster
     [src]="movie.posterUrl"

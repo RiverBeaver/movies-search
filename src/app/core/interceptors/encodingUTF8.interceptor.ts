@@ -4,7 +4,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { of, tap } from 'rxjs';
-import { UTF8, regexUTF8 } from '../constants/constants';
+import { UTF8, REGEX_UTF8 } from '../constants/constants';
 
 export const encodingUTF8Interceptor: HttpInterceptorFn = (req, next) => {
   if (!req.url.startsWith('https://api.kinopoisk.dev/v1.4/movie')) {
@@ -13,8 +13,7 @@ export const encodingUTF8Interceptor: HttpInterceptorFn = (req, next) => {
 
   const query = req.urlWithParams.slice(req.url.indexOf('?'));
 
-  const newQuery = query.replaceAll(regexUTF8, (match) => {
-    console.log(UTF8[match]);
+  const newQuery = query.replaceAll(REGEX_UTF8, (match) => {
     return UTF8[match];
   });
 
@@ -22,5 +21,6 @@ export const encodingUTF8Interceptor: HttpInterceptorFn = (req, next) => {
 
   const newReq = req.clone({ url: newUrlWithParams });
 
+  console.log(newReq);
   return next(newReq);
 };

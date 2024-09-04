@@ -16,11 +16,16 @@ export default class BriefInformationMovie {
     this.name = movie['name'];
     this.alternativeName = movie['alternativeName'];
     this.year = movie['year'];
-    this.posterUrl = movie['poster']['previewUrl'] || 'placeholder-movie.svg';
+    if (movie['poster']) {
+      this.posterUrl = movie['poster']['previewUrl'] || 'placeholder-movie.svg';
+    } else {
+      this.posterUrl = 'placeholder-movie.svg';
+    }
+
     this.isSeries = movie['isSeries'];
     this.movieLength = movie['movieLength'];
-    this.genres = movie['genres'].map((elem: { name: string }) => elem.name);
-    this.countries = movie['countries'].map(
+    this.genres = movie['genres']?.map((elem: { name: string }) => elem.name);
+    this.countries = movie['countries']?.map(
       (elem: { name: string }) => elem.name
     );
     this.ratingKp = movie['rating']['kp'];

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { KEY } from '../../../core/constants/constants';
 import BriefInformationMovie from '../../../core/classes/brief-information-movie.class';
 
@@ -20,18 +20,19 @@ type FilterParams = {
   providedIn: 'root',
 })
 export class UniversalMovieSearchService {
+  public moviesList$ = new Subject<BriefInformationMovie[]>();
+
   private options = {
     method: 'GET',
     headers: {
       accept: 'application/json',
-      ['Content-Type']: 'application/x-www-form-urlencoded;charset=UTF-8',
       'X-API-KEY': KEY,
     },
   };
 
   constructor(private http: HttpClient) {}
 
-  getGenresOrCountries(type: string): Observable<string[]> {
+  public getGenresOrCountries(type: string): Observable<string[]> {
     return this.http
       .get(
         `https://api.kinopoisk.dev/v1/movie/possible-values-by-field?field=${type}.name`,
@@ -48,7 +49,7 @@ export class UniversalMovieSearchService {
       );
   }
 
-  getFiveMovies(name: string): Observable<BriefInformationMovie[]> {
+  public getFiveMovies(name: string): Observable<BriefInformationMovie[]> {
     return this.http
       .get(
         `https://api.kinopoisk.dev/v1.4/movie/search?page=1&limit=5&query=${name}`,
@@ -65,12 +66,39 @@ export class UniversalMovieSearchService {
       );
   }
 
-  searchMoviesByName(name: string) {}
+  public searchMoviesByName(name: string) {}
 
-  searchMovieById(id: string) {}
+  public searchMovieById(id: string) {}
 
-  searchMoviesByFilter(type: string, params: FilterParams) {
+  public searchMoviesByFilter(type: string, params: FilterParams) {
+    console.log(type);
     type = '&type=' + type;
+
+    const paramsString = this.processingParameters(params);
+
+    return this.http
+      .get(
+        `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10${
+          type + paramsString
+        }`,
+        this.options
+      )
+      .pipe(
+        map((data: any) => {
+          const movies = data.docs;
+          console.log(movies);
+          return movies.map((elem: any) => {
+            return new BriefInformationMovie(elem);
+          });
+        })
+      )
+      .subscribe((data) => {
+        console.log(data);
+        this.moviesList$.next(data);
+      });
+  }
+
+  private processingParameters(params: FilterParams): string {
     const genres =
       params.genres && Array.isArray(params.genres)
         ? params.genres.reduce(
@@ -95,11 +123,6 @@ export class UniversalMovieSearchService {
       ? '&rating.imdb=' + params.ratings.imdb
       : '';
 
-    return this.http.get(
-      `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10${
-        type + genres + countries + year + ratingMpaa + ratingkp + ratingImdb
-      }`,
-      this.options
-    );
+    return genres + countries + year + ratingMpaa + ratingkp + ratingImdb;
   }
 }

@@ -1,3 +1,5 @@
+import { OptionElem } from '../classes/option.class';
+
 export const KEY = 'RFQ6H7W-W32MAJ9-H7PTAKQ-FTJR637';
 
 export const UTF8: Record<string, any> = {
@@ -27,7 +29,7 @@ export const UTF8: Record<string, any> = {
   '<': '%3C',
   '>': '%3E',
   '/': '%2F',
-  // ' ': '%5C',
+  ' ': '%20',
   А: '%D0%90',
   а: '%D0%B0',
   Б: '%D0%91',
@@ -105,4 +107,47 @@ for (let elem in UTF8) {
   }
 }
 listKeysUTF8 = '[' + listKeysUTF8 + ']';
-export const regexUTF8 = new RegExp(listKeysUTF8, 'g');
+export const REGEX_UTF8 = new RegExp(listKeysUTF8, 'g');
+
+export const YEARS_OPTIONS = [
+  new OptionElem('2024', '2024 год'),
+  new OptionElem('2023', '2023 год'),
+  new OptionElem('2022', '2022 год'),
+  new OptionElem('2021', '2021 год'),
+  new OptionElem('2020', '2020 год'),
+  new OptionElem('2019', '2019 год'),
+  new OptionElem('2018', '2018 год'),
+  new OptionElem('2017', '2017 год'),
+  new OptionElem('2016', '2016 год'),
+  new OptionElem('2020-2024', '2020-2024'),
+  new OptionElem('2015-2020', '2015-2020'),
+  new OptionElem('2010-2015', '2010-2015'),
+  new OptionElem('2000-2010', '2000-2010'),
+  new OptionElem('1990-2000', '1990-2000'),
+  new OptionElem('1980-1990', '1980-1990'),
+  new OptionElem('1874-1980', 'до 1980'),
+];
+
+export const RATING_OPTIONS = [
+  new OptionElem('9-10', 'Больше 9'),
+  new OptionElem('8-10', 'Больше 8'),
+  new OptionElem('7-10', 'Больше 7'),
+  new OptionElem('6-10', 'Больше 6'),
+  new OptionElem('5-10', 'Больше 5'),
+];
+
+export const MPAA_OPTIONS = [
+  new OptionElem('g', 'G', 'Фильм демонстрируется без ограничений'),
+  new OptionElem('pg', 'PG', 'Детям рекомендуется смотреть фильм с родителями'),
+  new OptionElem('pg13', 'PG-13', 'Просмотр не желателен детям до 13 лет'),
+  new OptionElem(
+    'r',
+    'R',
+    'Лица, не достигшие 17-летнего возраста, допускаются на фильм только в сопровождении одного из родителей, либо законного представителя'
+  ),
+  new OptionElem(
+    'nc17',
+    'NC-17',
+    'Лица 17-летнего возраста и младше на фильм не допускаются'
+  ),
+];

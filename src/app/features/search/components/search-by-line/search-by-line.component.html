@@ -2,8 +2,7 @@
   <input
     type="text"
     [formControl]="line"
-    (input)="showMovies()"
-    (focus)="changeFocus()"
+    (focus)="hasFocus()"
     placeholder="Введите название"
   />
   <button>
@@ -14,7 +13,7 @@
     {
     <app-brief-information-movie
       [movie]="movie"
-      [isLine]="true"
+      [isShort]="true"
     ></app-brief-information-movie>
     } }
   </div>

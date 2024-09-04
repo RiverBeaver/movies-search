@@ -12,13 +12,13 @@ import { NgClass, DecimalPipe } from '@angular/common';
 })
 export class BriefInformationMovieComponent {
   @Input() movie?: BriefInformationMovie;
-  @Input() isLine: boolean = false;
+  @Input() isShort: boolean = false;
 
-  showMovie(id: string) {
+  public showMovie(id: string) {
     console.log(id);
   }
 
-  test(value: any) {
+  public test(value: any) {
     console.dir(value.src);
   }
 }

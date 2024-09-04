@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
 import BriefInformationMovie from '../../../../core/classes/brief-information-movie.class';
 import { UniversalMovieSearchService } from '../../services/universal-movie-search.service';
 import { CommonModule } from '@angular/common';
@@ -23,16 +25,33 @@ import { BriefInformationMovieComponent } from '../../../movies-information/comp
   templateUrl: './search-by-line.component.html',
   styleUrl: './search-by-line.component.scss',
 })
-export class SearchByLineComponent {
-  line = new FormControl('');
-  isFocus: boolean = false;
-  fiveMovies$?: Observable<BriefInformationMovie[]>;
+export class SearchByLineComponent implements OnInit, OnDestroy {
+  public line = new FormControl<string>('');
+  public isFocus: boolean = false;
+  public fiveMovies$ = new Subject<BriefInformationMovie[]>();
+  private subscribeLine?: Subscription;
   private subscription?: Subscription;
-  inside = false;
+  private inside = false;
+  private debounceTime = 300;
 
   constructor(private universalSearch: UniversalMovieSearchService) {}
 
-  @HostListener('click')
+  ngOnInit(): void {
+    this.subscribeLine = this.line.valueChanges
+      .pipe(debounceTime(this.debounceTime))
+      .subscribe((value: string | null) => {
+        if (value) {
+          if (this.subscription) this.subscription.unsubscribe();
+          this.subscription = this.universalSearch
+            .getFiveMovies(value)
+            .subscribe((movies: BriefInformationMovie[]) => {
+              this.fiveMovies$.next(movies);
+            });
+        } else this.fiveMovies$.next([]);
+      });
+  }
+
+  @HostListener('mousedown')
   clicked() {
     this.inside = true;
   }
@@ -42,19 +61,15 @@ export class SearchByLineComponent {
     this.inside = false;
   }
 
-  showMovies() {
-    console.log(this.line.value);
-    if (this.subscription) this.subscription.unsubscribe();
-    if (this.line.value != null && this.line.value != '') {
-      this.fiveMovies$ = this.universalSearch.getFiveMovies(this.line.value);
-    }
-  }
-
-  onSubmit() {
+  public onSubmit(): void {
     console.log(this.line.value);
   }
 
-  changeFocus() {
+  public hasFocus(): void {
     this.isFocus = true;
+  }
+
+  ngOnDestroy(): void {
+    this.subscribeLine?.unsubscribe();
   }
 }

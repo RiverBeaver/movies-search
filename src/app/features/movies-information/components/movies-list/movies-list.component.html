@@ -1,0 +1,3 @@
+@for (movie of moviesList$ | async; track movie.id) {
+<app-brief-information-movie [movie]="movie"></app-brief-information-movie>
+}

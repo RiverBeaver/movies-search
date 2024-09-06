@@ -1,9 +1,4 @@
-import {
-  HttpEventType,
-  HttpInterceptorFn,
-  HttpResponse,
-} from '@angular/common/http';
-import { of, tap } from 'rxjs';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { UTF8, REGEX_UTF8 } from '../constants/constants';
 
 export const encodingUTF8Interceptor: HttpInterceptorFn = (req, next) => {
@@ -21,6 +16,5 @@ export const encodingUTF8Interceptor: HttpInterceptorFn = (req, next) => {
 
   const newReq = req.clone({ url: newUrlWithParams });
 
-  console.log(newReq);
   return next(newReq);
 };

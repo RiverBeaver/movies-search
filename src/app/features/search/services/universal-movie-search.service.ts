@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { KEY } from '../../../core/constants/constants';
 import BriefInformationMovie from '../../../core/classes/brief-information-movie.class';
@@ -20,8 +20,6 @@ type FilterParams = {
   providedIn: 'root',
 })
 export class UniversalMovieSearchService {
-  public moviesList$ = new Subject<BriefInformationMovie[]>();
-
   private options = {
     method: 'GET',
     headers: {
@@ -29,6 +27,10 @@ export class UniversalMovieSearchService {
       'X-API-KEY': KEY,
     },
   };
+  private _moviesListSubject$ = new BehaviorSubject<BriefInformationMovie[]>(
+    []
+  );
+  public moviesList$ = this._moviesListSubject$.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -44,7 +46,7 @@ export class UniversalMovieSearchService {
             return elem.name;
           });
 
-          return values;
+          return values.filter((elem: string) => elem != 'аниме');
         })
       );
   }
@@ -70,15 +72,14 @@ export class UniversalMovieSearchService {
 
   public searchMovieById(id: string) {}
 
-  public searchMoviesByFilter(type: string, params: FilterParams) {
-    console.log(type);
-    type = '&type=' + type;
+  public searchMoviesByFilter(types: string[], params: FilterParams) {
+    const type = types.reduce((acc, type) => acc + '&type=' + type, '');
 
     const paramsString = this.processingParameters(params);
 
     return this.http
       .get(
-        `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=10${
+        `https://api.kinopoisk.dev/v1.4/movie?page=1&limit=100&sortField=rating.kp&sortField=rating.imdb&sortType=-1&sortType=-1${
           type + paramsString
         }`,
         this.options
@@ -86,15 +87,13 @@ export class UniversalMovieSearchService {
       .pipe(
         map((data: any) => {
           const movies = data.docs;
-          console.log(movies);
           return movies.map((elem: any) => {
             return new BriefInformationMovie(elem);
           });
         })
       )
       .subscribe((data) => {
-        console.log(data);
-        this.moviesList$.next(data);
+        this._moviesListSubject$.next(data);
       });
   }
 
@@ -102,7 +101,7 @@ export class UniversalMovieSearchService {
     const genres =
       params.genres && Array.isArray(params.genres)
         ? params.genres.reduce(
-            (acc: string, elem: string) => acc + '&genres.name=' + elem,
+            (acc: string, elem: string) => acc + '&genres.name=+' + elem,
             ''
           )
         : '';

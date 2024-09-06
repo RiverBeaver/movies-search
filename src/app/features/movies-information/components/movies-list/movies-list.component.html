@@ -1,3 +1,8 @@
 @for (movie of moviesList$ | async; track movie.id) {
 <app-brief-information-movie [movie]="movie"></app-brief-information-movie>
+} @if ((moviesList$ | async)?.length === 0) {
+<div class="not-find">
+  <div class="title">Ничего не найдено</div>
+  <div class="hint">Попробуйте изменить параметры фильтра</div>
+</div>
 }

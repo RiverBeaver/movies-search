@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {
@@ -35,7 +42,9 @@ import {
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
 })
-export class SearchFormComponent {
+export class SearchFormComponent implements OnInit, OnChanges {
+  @Input() types: string[] = [];
+
   public yearOptions = YEARS_OPTIONS;
   public ratingOptions = RATING_OPTIONS;
   public mpaaOptions = MPAA_OPTIONS;
@@ -52,13 +61,24 @@ export class SearchFormComponent {
   });
 
   constructor(private universalSearch: UniversalMovieSearchService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['types'] && changes['types']) {
+      this.submitValues();
+    }
+  }
+
+  ngOnInit(): void {
+    this.submitValues();
+  }
 
   public addValue(event: { values: string[]; type: string }): void {
     this.searchForm.patchValue({ [event.type]: event.values });
   }
 
   public submitValues(): void {
-    console.log(this.searchForm.value);
-    this.universalSearch.searchMoviesByFilter('movie', this.searchForm.value);
+    this.universalSearch.searchMoviesByFilter(
+      this.types,
+      this.searchForm.value
+    );
   }
 }

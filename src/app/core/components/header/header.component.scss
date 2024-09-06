@@ -1,8 +1,36 @@
-:host {
+header {
   width: 100%;
   margin: 0;
-  padding: 10px 20px;
+  padding: 1rem 3rem;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  background-color: #010147;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+
+  li {
+  }
+
+  li::marker {
+    content: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:hover {
+    color: #8888ff;
+  }
+
+  a.active {
+    color: #8888ff;
+  }
 }

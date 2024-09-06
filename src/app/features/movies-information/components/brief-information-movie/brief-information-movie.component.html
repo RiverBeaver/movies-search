@@ -9,50 +9,82 @@
     [src]="movie.posterUrl"
     alt="poster"
     class="poster"
-    (click)="test(poster)"
     (onerror)="poster.src = 'placeholder-movie.svg'"
   />
   <div class="info">
-    <div class="name">
-      <span>{{ movie.name ? movie.name : movie.alternativeName }}</span>
-      @if (movie.name && movie.alternativeName && movie.name.length < 30) {
-      <span class="alternative">, {{ movie.alternativeName }}</span>
+    <div class="basic-info">
+      <div class="name-and-year-with-time">
+        <div class="name">
+          <span>{{ movie.name ? movie.name : movie.alternativeName }}</span>
+          @if (movie.name && movie.alternativeName && movie.name.length < 30) {
+          <span class="alternative">, {{ movie.alternativeName }}</span>
+          }
+        </div>
+        @if (!isShort) {
+        <div class="year-with-time">
+          @if (movie.isSeries && movie.releaseYears){
+          {{ movie.releaseYears | releaseYearsFormatter }}
+          } @else {
+          {{ movie.year }}{{ movie.year && movie.movieLength ? "," : "" }}
+          {{ movie.movieLength ? (movie.movieLength | timeFormatter) : "" }}
+          }
+        </div>
+        }
+      </div>
+      @if (!isShort) {
+      <div class="short-description">
+        {{ movie.shortDescription ? movie.shortDescription : "" }}
+      </div>
       }
     </div>
+
     <div class="ratings">
       @if (movie.ratingKp) {
-      <span
-        class="rating"
-        [ngClass]="
-          movie.ratingKp >= 7
-            ? 'positive'
-            : movie.ratingKp < 5
-            ? 'negative'
-            : ''
-        "
-      >
-        {{ movie.ratingKp | number : "1.1-1" }}
-      </span>
-      <span class="sub"> Кинопоиск </span>
+      <div class="rating">
+        <span
+          class="rating-number"
+          [ngClass]="
+            movie.ratingKp >= 7
+              ? 'positive'
+              : movie.ratingKp < 5
+              ? 'negative'
+              : ''
+          "
+        >
+          {{ movie.ratingKp | number : "1.1-1" }}
+        </span>
+        <span class="sub"> Кинопоиск </span>
+      </div>
+
       } @if (movie.ratingImdb) {
-      <span
-        class="rating"
-        [ngClass]="
-          movie.ratingImdb >= 7
-            ? 'positive'
-            : movie.ratingImdb < 5
-            ? 'negative'
-            : ''
-        "
-        >{{ movie.ratingImdb | number : "1.1-1" }}
-      </span>
-      <span class="sub"> IMDB</span>
+      <div class="rating">
+        <span
+          class="rating-number"
+          [ngClass]="
+            movie.ratingImdb >= 7
+              ? 'positive'
+              : movie.ratingImdb < 5
+              ? 'negative'
+              : ''
+          "
+          >{{ movie.ratingImdb | number : "1.1-1" }}
+        </span>
+        <span class="sub"> IMDB</span>
+      </div>
+
       }
     </div>
+
     <div class="other-info">
-      {{ movie.year }}@for (country of movie.countries; track country) {,
-      {{ country }}
+      @if (!isShort) {
+      <div class="genres">
+        {{ movie.genres ? movie.genres.join(", ") : "" }}
+      </div>
       }
+      <div class="year-and-countries">
+        {{ movie.year || "" }}{{ movie.year ? "," : "" }}
+        {{ movie.countries ? movie.countries.join(", ") : "" }}
+      </div>
     </div>
   </div>
 </div>

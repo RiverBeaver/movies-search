@@ -1,5 +1,28 @@
 :host {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  // align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.not-find {
+  display: grid;
+  justify-items: center;
+  margin-top: 5rem;
+  gap: 0.5rem;
+  line-height: normal;
+
+  .title {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .hint {
+    font-size: 0.875rem;
+    color: #777;
+  }
 }

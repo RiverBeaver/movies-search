@@ -27,7 +27,7 @@ import { BriefInformationMovieComponent } from '../../../movies-information/comp
 })
 export class SearchByLineComponent implements OnInit, OnDestroy {
   public line = new FormControl<string>('');
-  public isFocus: boolean = false;
+  public isOpen: boolean = false;
   public fiveMovies$ = new Subject<BriefInformationMovie[]>();
   private subscribeLine?: Subscription;
   private subscription?: Subscription;
@@ -57,16 +57,21 @@ export class SearchByLineComponent implements OnInit, OnDestroy {
   }
   @HostListener('document:click')
   clickedOut() {
-    this.isFocus = this.inside ? true : false;
+    if (this.isOpen) this.isOpen = this.inside ? true : false;
     this.inside = false;
+  }
+
+  public open(): void {
+    this.isOpen = true;
   }
 
   public onSubmit(): void {
     console.log(this.line.value);
   }
 
-  public hasFocus(): void {
-    this.isFocus = true;
+  public close() {
+    this.isOpen = false;
+    this.line.setValue('');
   }
 
   ngOnDestroy(): void {

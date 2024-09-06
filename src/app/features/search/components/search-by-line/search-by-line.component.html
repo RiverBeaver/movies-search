@@ -2,18 +2,19 @@
   <input
     type="text"
     [formControl]="line"
-    (focus)="hasFocus()"
+    (focus)="open()"
     placeholder="Введите название"
   />
   <button>
     <img src="icons8-поиск.svg" alt="Search" />
   </button>
-  <div class="list-movies" [hidden]="!isFocus">
+  <div class="list-movies" [hidden]="!isOpen">
     @if (this.line.value) { @for (movie of fiveMovies$ | async; track movie.id)
     {
     <app-brief-information-movie
       [movie]="movie"
       [isShort]="true"
+      (click)="close()"
     ></app-brief-information-movie>
     } }
   </div>

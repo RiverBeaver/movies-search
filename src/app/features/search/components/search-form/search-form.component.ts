@@ -24,6 +24,9 @@ import {
   RATING_OPTIONS,
   MPAA_OPTIONS,
 } from '../../../../core/constants/constants';
+import { Store } from '@ngrx/store';
+import BriefInformationMovie from '../../../../core/classes/brief-information-movie.class';
+import { UpdateMovieAction } from '../../../../store/actions/movies.action';
 
 @Component({
   selector: 'app-search-form',
@@ -60,7 +63,11 @@ export class SearchFormComponent implements OnInit, OnChanges {
     }),
   });
 
-  constructor(private universalSearch: UniversalMovieSearchService) {}
+  constructor(
+    private universalSearch: UniversalMovieSearchService,
+    private store: Store
+  ) {}
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['types'] && changes['types']) {
       this.submitValues();
@@ -76,9 +83,10 @@ export class SearchFormComponent implements OnInit, OnChanges {
   }
 
   public submitValues(): void {
-    this.universalSearch.searchMoviesByFilter(
-      this.types,
-      this.searchForm.value
-    );
+    this.universalSearch
+      .searchMoviesByFilter(this.types, this.searchForm.value)
+      .subscribe((movies: BriefInformationMovie[]) =>
+        this.store.dispatch(UpdateMovieAction({ movies }))
+      );
   }
 }

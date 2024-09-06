@@ -6,6 +6,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { cachingInterceptor } from './core/interceptors/caching.interceptor';
 import { encodingUTF8Interceptor } from './core/interceptors/encodingUTF8.interceptor';
+import { provideStore } from '@ngrx/store';
+import { moviesReducer } from './store/reducers/movies.reducers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([encodingUTF8Interceptor, cachingInterceptor])
     ),
+    provideStore({ movies: moviesReducer }),
     provideAnimationsAsync(),
   ],
 };

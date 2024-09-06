@@ -91,10 +91,11 @@ export class UniversalMovieSearchService {
             return new BriefInformationMovie(elem);
           });
         })
-      )
-      .subscribe((data) => {
-        this._moviesListSubject$.next(data);
-      });
+      );
+    // .subscribe((data) => {
+
+    //   this._moviesListSubject$.next(data);
+    // });
   }
 
   private processingParameters(params: FilterParams): string {

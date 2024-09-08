@@ -8,6 +8,8 @@ import { cachingInterceptor } from './core/interceptors/caching.interceptor';
 import { encodingUTF8Interceptor } from './core/interceptors/encodingUTF8.interceptor';
 import { provideStore } from '@ngrx/store';
 import { moviesReducer } from './store/reducers/movies.reducers';
+import { provideEffects } from '@ngrx/effects';
+import { getMovies } from './store/effects/movies.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +18,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([encodingUTF8Interceptor, cachingInterceptor])
     ),
-    provideStore({ movies: moviesReducer }),
     provideAnimationsAsync(),
+    provideStore({ movies: moviesReducer }),
+    provideEffects({ getMovies }),
   ],
 };

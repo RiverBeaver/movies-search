@@ -1,20 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { KEY } from '../../../core/constants/constants';
 import BriefInformationMovie from '../../../core/classes/brief-information-movie.class';
-
-type FilterParams = {
-  genres?: string[] | null;
-  countries?: string[] | null;
-  year?: string | null;
-  ratings?: {
-    mpaa?: string | null;
-    kp?: string | null;
-    imdb?: string | null;
-  };
-};
+import { FilterParams } from '../../../core/type/filter.type';
 
 @Injectable({
   providedIn: 'root',
@@ -27,10 +17,6 @@ export class UniversalMovieSearchService {
       'X-API-KEY': KEY,
     },
   };
-  private _moviesListSubject$ = new BehaviorSubject<BriefInformationMovie[]>(
-    []
-  );
-  public moviesList$ = this._moviesListSubject$.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -92,10 +78,6 @@ export class UniversalMovieSearchService {
           });
         })
       );
-    // .subscribe((data) => {
-
-    //   this._moviesListSubject$.next(data);
-    // });
   }
 
   private processingParameters(params: FilterParams): string {

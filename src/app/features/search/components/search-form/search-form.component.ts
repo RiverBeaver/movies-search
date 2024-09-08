@@ -3,7 +3,6 @@ import {
   Component,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
@@ -18,15 +17,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ChipsAutocompleteComponent } from '../chips-autocomplete/chips-autocomplete.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { UniversalMovieSearchService } from '../../services/universal-movie-search.service';
 import {
   YEARS_OPTIONS,
   RATING_OPTIONS,
   MPAA_OPTIONS,
 } from '../../../../core/constants/constants';
 import { Store } from '@ngrx/store';
-import BriefInformationMovie from '../../../../core/classes/brief-information-movie.class';
-import { UpdateMovieAction } from '../../../../store/actions/movies.action';
+import { GetMoviesFromServiceAction } from '../../../../store/actions/movies.action';
 
 @Component({
   selector: 'app-search-form',
@@ -45,7 +42,7 @@ import { UpdateMovieAction } from '../../../../store/actions/movies.action';
   templateUrl: './search-form.component.html',
   styleUrl: './search-form.component.scss',
 })
-export class SearchFormComponent implements OnInit, OnChanges {
+export class SearchFormComponent implements OnChanges {
   @Input() types: string[] = [];
 
   public yearOptions = YEARS_OPTIONS;
@@ -63,10 +60,7 @@ export class SearchFormComponent implements OnInit, OnChanges {
     }),
   });
 
-  constructor(
-    private universalSearch: UniversalMovieSearchService,
-    private store: Store
-  ) {}
+  constructor(private store: Store) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['types'] && changes['types']) {
@@ -74,19 +68,16 @@ export class SearchFormComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {
-    this.submitValues();
-  }
-
   public addValue(event: { values: string[]; type: string }): void {
     this.searchForm.patchValue({ [event.type]: event.values });
   }
 
   public submitValues(): void {
-    this.universalSearch
-      .searchMoviesByFilter(this.types, this.searchForm.value)
-      .subscribe((movies: BriefInformationMovie[]) =>
-        this.store.dispatch(UpdateMovieAction({ movies }))
-      );
+    this.store.dispatch(
+      GetMoviesFromServiceAction({
+        types: this.types,
+        option: this.searchForm.value,
+      })
+    );
   }
 }

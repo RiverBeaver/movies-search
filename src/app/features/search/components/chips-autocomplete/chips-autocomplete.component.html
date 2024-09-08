@@ -1,10 +1,10 @@
 <mat-form-field class="example-chip-list">
   <mat-label>{{ labelName }}</mat-label>
   <mat-chip-grid #chipGrid aria-label="labelName">
-    @for (fruit of values(); track $index) {
-    <mat-chip-row (removed)="remove(fruit)">
-      {{ fruit }}
-      <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+    @for (value of values(); track $index) {
+    <mat-chip-row (removed)="remove(value)">
+      {{ value }}
+      <button matChipRemove [attr.aria-label]="'remove ' + value">
         <mat-icon>cancel</mat-icon>
       </button>
     </mat-chip-row>

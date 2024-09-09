@@ -20,7 +20,6 @@ export class MovieSearchComponent {
   constructor() {}
 
   private _getTypes(type: string | null): string[] {
-    console.log(type);
     switch (type) {
       case 'movie':
         return ['movie'];

@@ -1,12 +1,20 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   HostListener,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Observable, Subject, Subscription } from 'rxjs';
+import {
+  debounceTime,
+  filter,
+  fromEvent,
+  Observable,
+  Subject,
+  Subscription,
+} from 'rxjs';
 import BriefInformationMovie from '../../../../core/classes/brief-information-movie.class';
 import { UniversalMovieSearchService } from '../../services/universal-movie-search.service';
 import { CommonModule } from '@angular/common';
@@ -30,19 +38,23 @@ export class SearchByLineComponent implements OnInit, OnDestroy {
   public isOpen: boolean = false;
   public fiveMovies$ = new Subject<BriefInformationMovie[]>();
   private subscribeLine?: Subscription;
-  private subscription?: Subscription;
-  private inside = false;
+  private subscriptionService?: Subscription;
+  private subscriptionEvent?: Subscription;
+  // private inside = false;
   private debounceTime = 300;
 
-  constructor(private universalSearch: UniversalMovieSearchService) {}
+  constructor(
+    private universalSearch: UniversalMovieSearchService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.subscribeLine = this.line.valueChanges
       .pipe(debounceTime(this.debounceTime))
       .subscribe((value: string | null) => {
         if (value) {
-          if (this.subscription) this.subscription.unsubscribe();
-          this.subscription = this.universalSearch
+          if (this.subscriptionService) this.subscriptionService.unsubscribe();
+          this.subscriptionService = this.universalSearch
             .getFiveMovies(value)
             .subscribe((movies: BriefInformationMovie[]) => {
               this.fiveMovies$.next(movies);
@@ -51,18 +63,38 @@ export class SearchByLineComponent implements OnInit, OnDestroy {
       });
   }
 
-  @HostListener('mousedown')
-  clicked() {
-    this.inside = true;
-  }
-  @HostListener('document:click')
-  clickedOut() {
-    if (this.isOpen) this.isOpen = this.inside ? true : false;
-    this.inside = false;
-  }
+  // @HostListener('mousedown')
+  // clicked() {
+  //   this.inside = true;
+  // }
+  // @HostListener('document:click')
+  // clickedOut() {
+  //   if (this.isOpen) this.isOpen = this.inside ? true : false;
+  //   this.inside = false;
+  // }
 
   public open(): void {
     this.isOpen = true;
+    this.subscriptionEvent = fromEvent(document, 'click')
+      .pipe(
+        // debounceTime(this.debounceTime),
+        filter((x: any) => {
+          let elem = x.target;
+          while (elem && elem !== document.body) {
+            if (elem.id === 'header-searth') {
+              return false;
+            }
+            elem = elem.parentNode;
+          }
+          return true;
+        })
+      )
+      .subscribe((x: any) => {
+        console.log(x);
+        this.isOpen = false;
+        this.cdr.detectChanges();
+        this.subscriptionEvent?.unsubscribe();
+      });
   }
 
   public onSubmit(): void {
@@ -72,6 +104,7 @@ export class SearchByLineComponent implements OnInit, OnDestroy {
   public close() {
     this.isOpen = false;
     this.line.setValue('');
+    this.subscriptionEvent?.unsubscribe();
   }
 
   ngOnDestroy(): void {
